@@ -1,5 +1,5 @@
 import unittest
-from hueflow.hueflow import No
+from hueflow.hueflow import No, Entrada
 
 class TesteNo(unittest.TestCase):
     
@@ -17,3 +17,14 @@ class TesteNo(unittest.TestCase):
         
         self.assertTrue(no_teste in self.nos_entrada[0].nos_saida)
         self.assertTrue(no_teste in self.nos_entrada[1].nos_saida)
+
+class TesteEntrada(unittest.TestCase):
+    
+    def teste_propagacao_frente_apenas_armazena_valor(self):
+        entrada_teste = Entrada()
+        
+        self.assertEqual(entrada_teste.valor, None)
+
+        entrada_teste.propagacao_frente(42)
+        self.assertEqual(entrada_teste.valor, 42)
+
