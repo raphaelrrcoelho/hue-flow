@@ -8,3 +8,14 @@ class No(object):
 
        for no in self.nos_entrada:
            no.nos_saida.append(self)
+
+        self.valor = None
+
+    def propagacao_frente(self):
+        """
+        Propagação para a frente.
+
+        Calcula o valor de saída baseando-se nos `inbound_nodes` e
+        armazena o valor final em self.value.
+        """
+        raise NotImplemented
