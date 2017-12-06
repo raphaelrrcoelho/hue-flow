@@ -27,3 +27,10 @@ class Entrada(No):
     def propagacao_frente(self, valor):
         if valor:
             self.valor = valor
+
+class Soma(No):
+    def __init__(self, x, y):
+        No.__init__(self, [x, y])
+
+    def propagacao_frente(self):
+        return sum([ no.valor for no in self.nos_entrada ])
