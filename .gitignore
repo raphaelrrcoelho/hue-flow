@@ -1,0 +1,102 @@
+# Aquivos compilados / otimizados / DLL
+__pycache__/
+*.py[cod]
+*$py.class
+
+# Extensões C
+*.so
+
+# Distribuição / empacotamento
+.Python
+build/
+develop-eggs/
+dist/
+downloads/
+eggs/
+.eggs/
+lib/
+lib64/
+parts/
+sdist/
+var/
+wheels/
+*.egg-info/
+.installed.cfg
+*.egg
+MANIFEST
+
+# PyInstaller
+*.manifest
+*.spec
+
+# Logs de instalação
+pip-log.txt
+pip-delete-this-directory.txt
+
+# Testes unitários / relatórios de cobertura
+htmlcov/
+.tox/
+.coverage
+.coverage.*
+.cache
+nosetests.xml
+coverage.xml
+*.cover
+.hypothesis/
+
+# Traduções
+*.mo
+*.pot
+
+# Coisas do Django
+*.log
+.static_storage/
+.media/
+local_settings.py
+
+# Coisad do Flask
+instance/
+.webassets-cache
+
+# Coisas do Scrapy
+.scrapy
+
+# Documentação Sphinx
+docs/_build/
+
+# PyBuilder
+target/
+
+# Jupyter Notebook
+.ipynb_checkpoints
+
+# pyenv
+.python-version
+
+# Arquivo de agendamento celery beat
+celerybeat-schedule
+
+# Arquivos anállisados SageMath
+*.sage.py
+
+# Ambientes
+.env
+.venv
+env/
+venv/
+ENV/
+env.bak/
+venv.bak/
+
+# Configuração de projetos Spyder
+.spyderproject
+.spyproject
+
+# Configuração de projetos Rope
+.ropeproject
+
+# Documentação mkdocs
+/site
+
+# mypy
+.mypy_cache/
