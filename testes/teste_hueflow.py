@@ -43,13 +43,11 @@ class TesteSoma(unittest.TestCase):
         entrada_1 = Entrada()
         entrada_2 = Entrada()
         entrada_3 = Entrada()
-        entrada_4 = Entrada()
         entrada_1.propagacao_frente(42)
         entrada_2.propagacao_frente(10)
         entrada_3.propagacao_frente(40)
-        entrada_4.propagacao_frente(1)
 
-        soma_teste = Soma(entrada_1, entrada_2, entrada_3, entrada_4)
+        soma_teste = Soma(entrada_1, entrada_2, entrada_3)
         soma_teste.propagacao_frente()
 
         self.assertEqual(soma_teste.valor, 93)

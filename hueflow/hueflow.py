@@ -18,7 +18,7 @@ class No(object):
         """
         Propagação para a frente.
 
-        Calcula o valor de saída baseando-se nos `inbound_nodes` e
+        Calcula o valor de saída baseando-se nos 'nos_entrada' e
         armazena o valor final em self.value.
         """
         raise NotImplemented
