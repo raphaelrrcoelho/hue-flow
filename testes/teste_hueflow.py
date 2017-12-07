@@ -1,5 +1,5 @@
 import unittest
-from hueflow.hueflow import No, Entrada, Soma
+from hueflow.hueflow import No, Entrada, Soma, ordenacao_topologica
 
 class TesteNo(unittest.TestCase):
     def setUp(self):
@@ -35,3 +35,14 @@ class TesteSoma(unittest.TestCase):
 
         soma_teste = Soma(entrada_1, entrada_2)
         self.assertEqual(soma_teste.propagacao_frente(), 62)
+
+class TesteGrafo(unittest.TestCase):
+    def teste_ordenacao_topologica_de_nos(self):
+        entrada_1 = Entrada()
+        entrada_2 = Entrada()
+
+        soma_teste = Soma(entrada_1, entrada_2)
+        dict_entrada = {entrada_1: 42, entrada_2: 20}
+
+        nos_ordenados = [entrada_1, entrada_2, soma_teste]
+        self.assertEqual(ordenacao_topologica(dict_entrada), nos_ordenados)
