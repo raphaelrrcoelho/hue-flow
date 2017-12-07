@@ -11,6 +11,9 @@ class No(object):
 
         self.valor = None
 
+    #def __eq__(self, obj):
+    #   return isinstance(obj, self.__class__) and obj.valor == self.valor
+
     def propagacao_frente(self):
         """
         Propagação para a frente.
@@ -24,8 +27,8 @@ class Entrada(No):
     def __init__(self):
         No.__init__(self)
 
-    def propagacao_frente(self, valor):
-        if valor:
+    def propagacao_frente(self, valor = None):
+        if valor is not None:
             self.valor = valor
 
 class Soma(No):
@@ -33,7 +36,7 @@ class Soma(No):
         No.__init__(self, [x, y])
 
     def propagacao_frente(self):
-        return sum([ no.valor for no in self.nos_entrada ])
+        self.valor = sum([ no.valor for no in self.nos_entrada ])
 
 def ordenacao_topologica(dict_entrada):
     """
@@ -42,35 +45,51 @@ def ordenacao_topologica(dict_entrada):
     Retorna uma lista de nós ordenados.
     """
 
-    nos_entrada = [ n for n in dict_entrada.keys() ]
+    nos_entrada = [ no for no in dict_entrada.keys() ]
 
     G = {}
     nos = [ n for n in nos_entrada ]
     while len(nos) > 0:
-        n = nos.pop(0)
-        if n not in G:
-            G[n] = {'entrada': set(), 'saida': set()}
-        for m in n.nos_saida:
+        no = nos.pop(0)
+        if no not in G:
+            G[no] = {'entrada': set(), 'saida': set()}
+        for m in no.nos_saida:
             if m not in G:
                 G[m] = {'entrada': set(), 'saida': set()}
-            G[n]['saida'].add(m)
-            G[m]['entrada'].add(n)
+            G[no]['saida'].add(m)
+            G[m]['entrada'].add(no)
             nos.append(m)
 
     L = []
     S = set(nos_entrada)
     while len(S) > 0:
-        n = S.pop()
+        no = S.pop()
 
-        if isinstance(n, Entrada):
-            n.valor = dict_entrada[n]
+        if isinstance(no, Entrada):
+            no.valor = dict_entrada[no]
 
-        L.append(n)
-        for m in n.nos_saida:
-            G[n]['saida'].remove(m)
-            G[m]['entrada'].remove(n)
+        L.append(no)
+        for m in no.nos_saida:
+            G[no]['saida'].remove(m)
+            G[m]['entrada'].remove(no)
             # Se não há nenhum outro nó de entrada, adicione em S
             if len(G[m]['entrada']) == 0:
                 S.add(m)
 
     return L
+
+def propagacao_frente(no_saida, nos_ordenados):
+    """
+    Realiza uma passagem para a frente por uma lista de nós ordenados.
+
+    Argumentos:
+    'output_node': O nó de saída do grafo (sem arestas de saída).
+    'sorted_nodes': uma lista topologicamente ordenada de nós.
+
+    Retorna o valor do nó de saída
+    """
+
+    for no in nos_ordenados:
+        no.propagacao_frente()
+
+    return no_saida.valor
