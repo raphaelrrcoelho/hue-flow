@@ -38,6 +38,17 @@ class Soma(No):
     def propagacao_frente(self):
         self.valor = sum([ no.valor for no in self.nos_entrada ])
 
+class Linear(No):
+    def __init__(self, entradas, pesos, vies):
+        No.__init__(self, [entradas, pesos, vies])
+
+    def propagacao_frente(self):
+        entradas = self.nos_entrada[0].valor
+        pesos = self.nos_entrada[1].valor
+        vies = self.nos_entrada[2].valor
+
+        self.valor = np.array(entradas).dot(pesos) + vies
+
 def ordenacao_topologica(dict_entrada):
     """
     Ordena nós genéricos em ordem topológica utilizando o Algorítmo de Kahn.

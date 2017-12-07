@@ -1,5 +1,5 @@
 import unittest
-from hueflow.hueflow import No, Entrada, Soma
+from hueflow.hueflow import No, Entrada, Soma, Linear
 from hueflow.hueflow import ordenacao_topologica, propagacao_frente
 
 class TesteNo(unittest.TestCase):
@@ -50,7 +50,22 @@ class TesteSoma(unittest.TestCase):
         soma_teste = Soma(entrada_1, entrada_2, entrada_3)
         soma_teste.propagacao_frente()
 
-        self.assertEqual(soma_teste.valor, 93)
+        self.assertEqual(soma_teste.valor, 92)
+
+class TesteLinear(unittest.TestCase):
+    def teste_produto_escalar_de_nos_de_entradas_e_pesos(self):
+        entradas, pesos, vies = Entrada(), Entrada(), Entrada()
+
+        entradas.propagacao_frente([6, 12, 3])
+        pesos.propagacao_frente([0.5, 0.25, 1.5])
+        vies.propagacao_frente([2])
+
+        linear_teste = Linear(entradas, pesos, vies)
+        linear_teste.propagacao_frente()
+
+        self.assertEqual(linear_teste.valor, 12.5)
+
+
 
 class TesteGrafo(unittest.TestCase):
     def teste_ordenacao_topologica_de_nos(self):
