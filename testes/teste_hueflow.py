@@ -1,6 +1,6 @@
 import unittest
 import numpy as np
-from hueflow.hueflow import No, Entrada, Soma, Linear
+from hueflow.hueflow import No, Entrada, Soma, Linear, Sigmoide
 from hueflow.hueflow import ordenacao_topologica, propagacao_frente
 
 class TesteNo(unittest.TestCase):
@@ -61,7 +61,7 @@ class TesteLinear(unittest.TestCase):
         pesos.propagacao_frente([0.5, 0.25, 1.5])
         vies.propagacao_frente([2])
 
-        linear_teste = Linear(entradas, pesos, vies)
+        linear_teste = Linear([entradas, pesos, vies])
         linear_teste.propagacao_frente()
 
         self.assertEqual(linear_teste.valor, 12.5)
@@ -73,11 +73,37 @@ class TesteLinear(unittest.TestCase):
         W.propagacao_frente(np.array([[2., -3], [2., -3]]))
         b.propagacao_frente(np.array([-3., -5]))
 
-        linear_teste = Linear(X, W, b)
+        linear_teste = Linear([X, W, b])
         linear_teste.propagacao_frente()
 
         saida = np.array([[-9., 4.], [-9., 4.]])
         self.assertTrue((linear_teste.valor == saida).all())
+
+class TesteSigmoide(unittest.TestCase):
+    def teste_funcao_ativacao_de_sigmoide(self):
+        sigmoide_teste = Sigmoide()
+        entrada_infinita = np.array([np.log(0)])
+        saida = np.array([0])
+
+        self.assertAlmostEqual(
+            sigmoide_teste._sigmoide(entrada_infinita), saida)
+
+    def teste_sigmoide_em_produto_escalar_de_matrizes_e_pesos(self):
+        X, W, b = Entrada(), Entrada(), Entrada()
+
+        X.propagacao_frente(np.array([[-1., -2.], [-1, -2]]))
+        W.propagacao_frente(np.array([[2., -3], [2., -3]]))
+        b.propagacao_frente(np.array([-3., -5]))
+
+        linear = Linear([X, W, b])
+        linear.propagacao_frente()
+
+        sigmoide_teste = Sigmoide([linear])
+        sigmoide_teste.propagacao_frente()
+
+        saida = np.array([[1.23394576e-04, 9.82013790e-01],
+                          [1.23394576e-04, 9.82013790e-01]])
+        np.testing.assert_almost_equal(sigmoide_teste.valor, saida)
 
 class TesteGrafo(unittest.TestCase):
     def teste_ordenacao_topologica_de_nos(self):

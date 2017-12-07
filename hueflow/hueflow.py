@@ -39,8 +39,8 @@ class Soma(No):
         self.valor = sum([ no.valor for no in self.nos_entrada ])
 
 class Linear(No):
-    def __init__(self, entradas, pesos, vies):
-        No.__init__(self, [entradas, pesos, vies])
+    def __init__(self, entrada_peso_vies = []):
+        No.__init__(self, entrada_peso_vies)
 
     def propagacao_frente(self):
         entradas = self.nos_entrada[0].valor
@@ -48,6 +48,22 @@ class Linear(No):
         vies = self.nos_entrada[2].valor
 
         self.valor = np.array(entradas).dot(pesos) + vies
+
+class Sigmoide(No):
+    def __init__(self, no_entrada = []):
+        No.__init__(self, no_entrada)
+
+    def _sigmoide(self, x):
+        """
+        'x': Um objeto semelhante a uma array do numpy.
+
+        Return the result of the sigmoid function.
+        """
+        return 1 / (1 + np.exp(-x))
+
+    def propagacao_frente(self):
+        self.valor = self._sigmoide(
+            np.array([ no.valor for no in self.nos_entrada]))[0]
 
 def ordenacao_topologica(dict_entrada):
     """
