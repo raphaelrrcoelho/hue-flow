@@ -32,8 +32,8 @@ class Entrada(No):
             self.valor = valor
 
 class Soma(No):
-    def __init__(self, x, y):
-        No.__init__(self, [x, y])
+    def __init__(self, *arg):
+        No.__init__(self, list(arg))
 
     def propagacao_frente(self):
         self.valor = sum([ no.valor for no in self.nos_entrada ])

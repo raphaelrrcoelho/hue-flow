@@ -28,7 +28,7 @@ class TesteEntrada(unittest.TestCase):
         self.assertEqual(entrada_teste.valor, 42)
 
 class TesteSoma(unittest.TestCase):
-    def teste_propagacao_frente_soma_nos_de_entrada(self):
+    def teste_propagacao_frente_soma_dois_nos_de_entrada(self):
         entrada_1 = Entrada()
         entrada_2 = Entrada()
         entrada_1.propagacao_frente(42)
@@ -38,6 +38,21 @@ class TesteSoma(unittest.TestCase):
         soma_teste.propagacao_frente()
 
         self.assertEqual(soma_teste.valor, 62)
+
+    def teste_propagacao_frente_soma_n_nos_de_entrada(self):
+        entrada_1 = Entrada()
+        entrada_2 = Entrada()
+        entrada_3 = Entrada()
+        entrada_4 = Entrada()
+        entrada_1.propagacao_frente(42)
+        entrada_2.propagacao_frente(10)
+        entrada_3.propagacao_frente(40)
+        entrada_4.propagacao_frente(1)
+
+        soma_teste = Soma(entrada_1, entrada_2, entrada_3, entrada_4)
+        soma_teste.propagacao_frente()
+
+        self.assertEqual(soma_teste.valor, 93)
 
 class TesteGrafo(unittest.TestCase):
     def teste_ordenacao_topologica_de_nos(self):
