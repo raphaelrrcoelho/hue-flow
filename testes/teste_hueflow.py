@@ -1,4 +1,5 @@
 import unittest
+import numpy as np
 from hueflow.hueflow import No, Entrada, Soma, Linear
 from hueflow.hueflow import ordenacao_topologica, propagacao_frente
 
@@ -65,7 +66,18 @@ class TesteLinear(unittest.TestCase):
 
         self.assertEqual(linear_teste.valor, 12.5)
 
+    def teste_produto_escalar_matrizes_de_entradas_e_pesos(self):
+        X, W, b = Entrada(), Entrada(), Entrada()
 
+        X.propagacao_frente(np.array([[-1., -2.], [-1, -2]]))
+        W.propagacao_frente(np.array([[2., -3], [2., -3]]))
+        b.propagacao_frente(np.array([-3., -5]))
+
+        linear_teste = Linear(X, W, b)
+        linear_teste.propagacao_frente()
+
+        saida = np.array([[-9., 4.], [-9., 4.]])
+        self.assertTrue((linear_teste.valor == saida).all())
 
 class TesteGrafo(unittest.TestCase):
     def teste_ordenacao_topologica_de_nos(self):
@@ -88,5 +100,5 @@ class TesteGrafo(unittest.TestCase):
         soma_teste = Soma(entrada_1, entrada_2)
         nos_ordenados = [entrada_1, entrada_2, soma_teste]
 
-        self.assertEqual(
-            propagacao_frente(soma_teste, nos_ordenados), 62)
+        saida = propagacao_frente(soma_teste, nos_ordenados)
+        self.assertEqual(saida, 62)
