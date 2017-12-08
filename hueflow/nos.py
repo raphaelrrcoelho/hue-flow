@@ -85,8 +85,6 @@ class Sigmoide(No):
 
     def _derivada(self, x):
         """
-        'x': Um objeto semelhante a uma array do numpy.
-
         Retorna a derivada da função Sigmóide.
         """
         return self._sigmoide(x) * (1 - self._sigmoide(x))
@@ -94,6 +92,16 @@ class Sigmoide(No):
     def propagacao(self):
         self.valor = self._sigmoide(
             np.array([ no.valor for no in self.nos_entrada]))[0]
+
+    def retropropagacao(self):
+        self.gradientes = { no: np.zeros(no.valor.shape) for no in self.nos_entrada }
+
+        for no in self.nos_saida:
+            gradiente_custo = no.gradientes[self]
+            derivada = self._derivada(self.nos_entrada[0].valor)
+
+            # parcial do custo em relação as entradas
+            self.gradientes[self.nos_entrada[0]] += (gradiente_custo * derivada)
 
 class EQM(No):
     def __init__(self, nos_entrada = []):

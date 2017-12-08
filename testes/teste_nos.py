@@ -144,6 +144,35 @@ class TesteSigmoide(unittest.TestCase):
                           [1.23394576e-04, 9.82013790e-01]])
         np.testing.assert_almost_equal(sigmoide_teste.valor, saida)
 
+    def teste_retropropagacao_de_entradas_e_pesos(self):
+        X, W, b = Entrada(), Entrada(), Entrada()
+        y = Entrada()
+
+        linear = Linear([X, W, b])
+        sigmoide_teste = Sigmoide([linear])
+        custo = EQM([y, sigmoide_teste])
+
+        X.propagacao(np.array([[1., 0.]]))
+        W.propagacao(np.array([[0., 0.],
+                               [1., 1.]]))
+        b.propagacao(np.array([0, 0]))
+        y.propagacao(np.array([0, 1]))
+
+        linear.propagacao()
+        sigmoide_teste.propagacao()
+        custo.propagacao()
+
+        custo.retropropagacao()
+        sigmoide_teste.retropropagacao()
+
+        sigmoide_derivada = sigmoide_teste._derivada(linear.valor)
+        erro = (y.valor - sigmoide_teste.valor)
+
+        gradiente_entradas = (-2/2) * (erro * sigmoide_derivada)
+
+        np.testing.assert_almost_equal(
+            sigmoide_teste.gradientes[linear], gradiente_entradas)
+
 class TesteEQM(unittest.TestCase):
     def teste_erro_quadratico_medio_para_saida_e_aproximacao(self):
         y, y_chapeu = Entrada(), Entrada()
