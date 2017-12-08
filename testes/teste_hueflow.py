@@ -1,122 +1,8 @@
 import unittest
 import numpy as np
-from hueflow.hueflow import No, Entrada, Soma
-from hueflow.hueflow import Linear, Sigmoide, EQM
-from hueflow.hueflow import ordenacao_topologica, propagacao_frente
-
-class TesteNo(unittest.TestCase):
-    def setUp(self):
-       no_1 = No()
-       no_2 = No()
-       self.nos_entrada = [no_1, no_2]
-
-    def teste_criar_no_com_lista_de_nos_de_entrada(self):
-       no_teste = No(nos_entrada = self.nos_entrada)
-       self.assertEqual(no_teste.nos_entrada, self.nos_entrada)
-
-    def teste_adicionar_a_si_como_saida_dos_seus_nos_de_entrada(self):
-        no_teste = No(nos_entrada = self.nos_entrada)
-
-        self.assertTrue(no_teste in self.nos_entrada[0].nos_saida)
-        self.assertTrue(no_teste in self.nos_entrada[1].nos_saida)
-
-class TesteEntrada(unittest.TestCase):
-    def teste_propagacao_frente_apenas_armazena_valor(self):
-        entrada_teste = Entrada()
-
-        self.assertEqual(entrada_teste.valor, None)
-
-        entrada_teste.propagacao_frente(42)
-        self.assertEqual(entrada_teste.valor, 42)
-
-class TesteSoma(unittest.TestCase):
-    def teste_propagacao_frente_soma_dois_nos_de_entrada(self):
-        entrada_1 = Entrada()
-        entrada_2 = Entrada()
-        entrada_1.propagacao_frente(42)
-        entrada_2.propagacao_frente(20)
-
-        soma_teste = Soma(entrada_1, entrada_2)
-        soma_teste.propagacao_frente()
-
-        self.assertEqual(soma_teste.valor, 62)
-
-    def teste_propagacao_frente_soma_n_nos_de_entrada(self):
-        entrada_1 = Entrada()
-        entrada_2 = Entrada()
-        entrada_3 = Entrada()
-        entrada_1.propagacao_frente(42)
-        entrada_2.propagacao_frente(10)
-        entrada_3.propagacao_frente(40)
-
-        soma_teste = Soma(entrada_1, entrada_2, entrada_3)
-        soma_teste.propagacao_frente()
-
-        self.assertEqual(soma_teste.valor, 92)
-
-class TesteLinear(unittest.TestCase):
-    def teste_produto_escalar_de_nos_de_entradas_e_pesos(self):
-        entradas, pesos, vies = Entrada(), Entrada(), Entrada()
-
-        entradas.propagacao_frente([6, 12, 3])
-        pesos.propagacao_frente([0.5, 0.25, 1.5])
-        vies.propagacao_frente([2])
-
-        linear_teste = Linear([entradas, pesos, vies])
-        linear_teste.propagacao_frente()
-
-        self.assertEqual(linear_teste.valor, 12.5)
-
-    def teste_produto_escalar_matrizes_de_entradas_e_pesos(self):
-        X, W, b = Entrada(), Entrada(), Entrada()
-
-        X.propagacao_frente(np.array([[-1., -2.], [-1, -2]]))
-        W.propagacao_frente(np.array([[2., -3], [2., -3]]))
-        b.propagacao_frente(np.array([-3., -5]))
-
-        linear_teste = Linear([X, W, b])
-        linear_teste.propagacao_frente()
-
-        saida = np.array([[-9., 4.], [-9., 4.]])
-        self.assertTrue((linear_teste.valor == saida).all())
-
-class TesteSigmoide(unittest.TestCase):
-    def teste_funcao_ativacao_de_sigmoide(self):
-        sigmoide_teste = Sigmoide()
-        entrada_infinita = np.array([np.log(0)])
-        saida = np.array([0])
-
-        self.assertAlmostEqual(
-            sigmoide_teste._sigmoide(entrada_infinita), saida)
-
-    def teste_sigmoide_em_produto_escalar_de_matrizes_e_pesos(self):
-        X, W, b = Entrada(), Entrada(), Entrada()
-
-        X.propagacao_frente(np.array([[-1., -2.], [-1, -2]]))
-        W.propagacao_frente(np.array([[2., -3], [2., -3]]))
-        b.propagacao_frente(np.array([-3., -5]))
-
-        linear = Linear([X, W, b])
-        linear.propagacao_frente()
-
-        sigmoide_teste = Sigmoide([linear])
-        sigmoide_teste.propagacao_frente()
-
-        saida = np.array([[1.23394576e-04, 9.82013790e-01],
-                          [1.23394576e-04, 9.82013790e-01]])
-        np.testing.assert_almost_equal(sigmoide_teste.valor, saida)
-
-class TesteEQM(unittest.TestCase):
-    def teste_erro_quadratico_medio_para_saida_e_aproximacao(self):
-        y, y_chapeu = Entrada(), Entrada()
-
-        y.propagacao_frente(np.array([1, 2, 3]))
-        y_chapeu.propagacao_frente(np.array([4.5, 5, 10]))
-
-        eqm_teste = EQM([y, y_chapeu])
-        eqm_teste.propagacao_frente()
-
-        self.assertAlmostEqual(eqm_teste.valor, 23.4166666667)
+from hueflow.nos import No, Entrada, Soma
+from hueflow.nos import Linear, Sigmoide, EQM
+from hueflow.hueflow import ordenacao_topologica, propagacao
 
 class TesteGrafo(unittest.TestCase):
     def teste_ordenacao_topologica_de_nos(self):
@@ -130,14 +16,14 @@ class TesteGrafo(unittest.TestCase):
         self.assertEqual(
             ordenacao_topologica(dict_entrada), nos_ordenados)
 
-    def teste_propagacao_frente_da_rede(self):
+    def teste_propagacao_da_rede(self):
         entrada_1 = Entrada()
         entrada_2 = Entrada()
-        entrada_1.propagacao_frente(42)
-        entrada_2.propagacao_frente(20)
+        entrada_1.propagacao(42)
+        entrada_2.propagacao(20)
 
         soma_teste = Soma(entrada_1, entrada_2)
         nos_ordenados = [entrada_1, entrada_2, soma_teste]
 
-        saida = propagacao_frente(soma_teste, nos_ordenados)
+        saida = propagacao(soma_teste, nos_ordenados)
         self.assertEqual(saida, 62)

@@ -1,79 +1,5 @@
 import numpy as np
-
-class No(object):
-    def __init__(self, nos_entrada = []):
-        self.nos_entrada = nos_entrada
-
-        self.nos_saida = []
-
-        for no in self.nos_entrada:
-            no.nos_saida.append(self)
-
-        self.valor = None
-
-    #def __eq__(self, obj):
-    #   return isinstance(obj, self.__class__) and obj.valor == self.valor
-
-    def propagacao_frente(self):
-        """
-        Propagação para a frente.
-
-        Calcula o valor de saída baseando-se nos 'nos_entrada' e
-        armazena o valor final em self.value.
-        """
-        raise NotImplemented
-
-class Entrada(No):
-    def __init__(self):
-        No.__init__(self)
-
-    def propagacao_frente(self, valor = None):
-        if valor is not None:
-            self.valor = valor
-
-class Soma(No):
-    def __init__(self, *arg):
-        No.__init__(self, list(arg))
-
-    def propagacao_frente(self):
-        self.valor = sum([ no.valor for no in self.nos_entrada ])
-
-class Linear(No):
-    def __init__(self, entrada_peso_vies = []):
-        No.__init__(self, entrada_peso_vies)
-
-    def propagacao_frente(self):
-        entradas = self.nos_entrada[0].valor
-        pesos = self.nos_entrada[1].valor
-        vies = self.nos_entrada[2].valor
-
-        self.valor = np.array(entradas).dot(pesos) + vies
-
-class Sigmoide(No):
-    def __init__(self, no_entrada = []):
-        No.__init__(self, no_entrada)
-
-    def _sigmoide(self, x):
-        """
-        'x': Um objeto semelhante a uma array do numpy.
-
-        Return the result of the sigmoid function.
-        """
-        return 1 / (1 + np.exp(-x))
-
-    def propagacao_frente(self):
-        self.valor = self._sigmoide(
-            np.array([ no.valor for no in self.nos_entrada]))[0]
-
-class EQM(No):
-    def __init__(self, nos_entrada = []):
-        No.__init__(self, nos_entrada)
-
-    def propagacao_frente(self):
-        y = self.nos_entrada[0].valor
-        y_chapeu = self.nos_entrada[1].valor
-
-        self.valor = np.square(y - y_chapeu).sum() / y.shape[0]
+from hueflow.nos import Entrada
 
 def ordenacao_topologica(dict_entrada):
     """
@@ -115,18 +41,18 @@ def ordenacao_topologica(dict_entrada):
 
     return L
 
-def propagacao_frente(no_saida, nos_ordenados):
+def propagacao(no_saida, nos_ordenados):
     """
     Realiza uma passagem para a frente por uma lista de nós ordenados.
 
     Argumentos:
-    'output_node': O nó de saída do grafo (sem arestas de saída).
-    'sorted_nodes': uma lista topologicamente ordenada de nós.
+    'no_saida': O nó de saída do grafo (sem arestas de saída).
+    'nos_ordenados': uma lista topologicamente ordenada de nós.
 
     Retorna o valor do nó de saída
     """
 
     for no in nos_ordenados:
-        no.propagacao_frente()
+        no.propagacao()
 
     return no_saida.valor
