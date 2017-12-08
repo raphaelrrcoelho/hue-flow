@@ -80,6 +80,21 @@ class TesteLinear(unittest.TestCase):
         saida = np.array([[-9., 4.], [-9., 4.]])
         self.assertTrue((linear_teste.valor == saida).all())
 
+    def teste_retropropagacao_de_entradas_e_pesos(self):
+        X, W, b = Entrada(), Entrada(), Entrada()
+
+        X.propagacao(np.array([[-1., -2.], [-1, -2]]))
+        W.propagacao(np.array([[2., -3], [2., -3]]))
+        b.propagacao(np.array([-3., -5]))
+
+        linear_teste = Linear([X, W, b])
+        linear_teste.propagacao()
+
+        custo = EQM()
+
+        saida = np.array([[-9., 4.], [-9., 4.]])
+        self.assertTrue(True)
+
 class TesteSigmoide(unittest.TestCase):
     def teste_funcao_ativacao_de_sigmoide(self):
         sigmoide_teste = Sigmoide()
@@ -126,3 +141,18 @@ class TesteEQM(unittest.TestCase):
 
         self.assertAlmostEqual(eqm_teste.valor, 23.4166666667)
 
+    def teste_retropropagacao_saidas_e_corretos(self):
+        y, y_chapeu = Entrada(), Entrada()
+
+        y.propagacao(np.array([1, 2, 3]))
+        y_chapeu.propagacao(np.array([4.5, 5, 10]))
+
+        eqm_teste = EQM([y, y_chapeu])
+        eqm_teste.propagacao()
+        eqm_teste.retropropagacao()
+
+        gradiente_pesos = (-2/3) * (y.valor - y_chapeu.valor)
+        gradiente_respostas = (2/3) * (y.valor - y_chapeu.valor)
+
+        np.testing.assert_almost_equal(eqm_teste.gradientes[y_chapeu], gradiente_pesos)
+        np.testing.assert_almost_equal(eqm_teste.gradientes[y], gradiente_respostas)

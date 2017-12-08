@@ -11,17 +11,24 @@ class No(object):
 
         self.valor = None
 
+        self.gradientes = {}
+
     #def __eq__(self, obj):
     #   return isinstance(obj, self.__class__) and obj.valor == self.valor
 
     def propagacao(self):
         """
-        Propagação para a frente.
-
-        Calcula o valor de saída baseando-se nos 'nos_entrada' e
-        armazena o valor final em self.value.
+        Todo nó que estende essa classe base deverá
+        definir seu próprio método 'propagacao'.
         """
         raise NotImplemented
+
+    def retropropagacao(self):
+        """
+        Todo nó que estende essa classe base deverá
+        definir seu próprio método 'retropropagacao'.
+        """
+        raise NotImplementedError
 
 class Entrada(No):
     def __init__(self):
@@ -81,5 +88,11 @@ class EQM(No):
         y = self.nos_entrada[0].valor
         y_chapeu = self.nos_entrada[1].valor
 
-        self.valor = np.square(y - y_chapeu).sum() / y.shape[0]
+        self.erro = y - y_chapeu
+        self.m = y.shape[0]
+        self.valor = np.square(self.erro).sum() / self.m
+
+    def retropropagacao(self):
+        self.gradientes[self.nos_entrada[0]] = ( 2/self.m) * self.erro
+        self.gradientes[self.nos_entrada[1]] = (-2/self.m) * self.erro
 
