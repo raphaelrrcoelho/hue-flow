@@ -65,6 +65,16 @@ class Sigmoide(No):
         self.valor = self._sigmoide(
             np.array([ no.valor for no in self.nos_entrada]))[0]
 
+class EQM(No):
+    def __init__(self, nos_entrada = []):
+        No.__init__(self, nos_entrada)
+
+    def propagacao_frente(self):
+        y = self.nos_entrada[0].valor
+        y_chapeu = self.nos_entrada[1].valor
+
+        self.valor = np.square(y - y_chapeu).sum() / y.shape[0]
+
 def ordenacao_topologica(dict_entrada):
     """
     Ordena nós genéricos em ordem topológica utilizando o Algorítmo de Kahn.

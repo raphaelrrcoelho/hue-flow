@@ -1,6 +1,7 @@
 import unittest
 import numpy as np
-from hueflow.hueflow import No, Entrada, Soma, Linear, Sigmoide
+from hueflow.hueflow import No, Entrada, Soma
+from hueflow.hueflow import Linear, Sigmoide, EQM
 from hueflow.hueflow import ordenacao_topologica, propagacao_frente
 
 class TesteNo(unittest.TestCase):
@@ -104,6 +105,18 @@ class TesteSigmoide(unittest.TestCase):
         saida = np.array([[1.23394576e-04, 9.82013790e-01],
                           [1.23394576e-04, 9.82013790e-01]])
         np.testing.assert_almost_equal(sigmoide_teste.valor, saida)
+
+class TesteEQM(unittest.TestCase):
+    def teste_erro_quadratico_medio_para_saida_e_aproximacao(self):
+        y, y_chapeu = Entrada(), Entrada()
+
+        y.propagacao_frente(np.array([1, 2, 3]))
+        y_chapeu.propagacao_frente(np.array([4.5, 5, 10]))
+
+        eqm_teste = EQM([y, y_chapeu])
+        eqm_teste.propagacao_frente()
+
+        self.assertAlmostEqual(eqm_teste.valor, 23.4166666667)
 
 class TesteGrafo(unittest.TestCase):
     def teste_ordenacao_topologica_de_nos(self):
