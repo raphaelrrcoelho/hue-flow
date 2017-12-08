@@ -151,8 +151,10 @@ class TesteEQM(unittest.TestCase):
         eqm_teste.propagacao()
         eqm_teste.retropropagacao()
 
-        gradiente_pesos = (-2/3) * (y.valor - y_chapeu.valor)
+        gradiente_entradas = (-2/3) * (y.valor - y_chapeu.valor)
         gradiente_respostas = (2/3) * (y.valor - y_chapeu.valor)
 
-        np.testing.assert_almost_equal(eqm_teste.gradientes[y_chapeu], gradiente_pesos)
-        np.testing.assert_almost_equal(eqm_teste.gradientes[y], gradiente_respostas)
+        np.testing.assert_almost_equal(
+            eqm_teste.gradientes[y_chapeu], gradiente_entradas)
+        np.testing.assert_almost_equal(
+            eqm_teste.gradientes[y], gradiente_respostas)
