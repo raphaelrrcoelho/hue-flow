@@ -56,6 +56,21 @@ class Linear(No):
 
         self.valor = np.array(entradas).dot(pesos) + vies
 
+    def retropropagacao(self):
+        self.gradientes = { no: np.zeros(no.valor.shape) for no in self.nos_entrada }
+
+        for no in self.nos_saida:
+            gradiente_custo = no.gradientes[self]
+
+            # parcial do custo em relação as entradas
+            self.gradientes[self.nos_entrada[0]] += \
+                    gradiente_custo.dot(self.nos_entrada[1].valor)
+            # parcial do custo em relação aos pesos
+            self.gradientes[self.nos_entrada[1]] += \
+                    gradiente_custo.dot(self.nos_entrada[0].valor)
+            # parcial do custo em relação aos vieses
+            self.gradientes[self.nos_entrada[2]] += gradiente_custo.sum(axis = 1)
+
 class Sigmoide(No):
     def __init__(self, no_entrada = []):
         No.__init__(self, no_entrada)

@@ -81,19 +81,34 @@ class TesteLinear(unittest.TestCase):
         self.assertTrue((linear_teste.valor == saida).all())
 
     def teste_retropropagacao_de_entradas_e_pesos(self):
-        X, W, b = Entrada(), Entrada(), Entrada()
-
-        X.propagacao(np.array([[-1., -2.], [-1, -2]]))
-        W.propagacao(np.array([[2., -3], [2., -3]]))
-        b.propagacao(np.array([-3., -5]))
-
+        X, W, b, y = Entrada(), Entrada(), Entrada(), Entrada()
         linear_teste = Linear([X, W, b])
+
+        custo = EQM([y, linear_teste])
+
+        X.propagacao(np.array([[1., 1.], [1., 1.]]))
+        W.propagacao(np.array([[1., 1.], [1., 1.]]))
+        b.propagacao(np.array([0, 0]))
+        y.propagacao(np.array([1, 3]))
+
         linear_teste.propagacao()
+        custo.propagacao()
 
-        custo = EQM()
+        custo.retropropagacao()
+        linear_teste.retropropagacao()
 
-        saida = np.array([[-9., 4.], [-9., 4.]])
-        self.assertTrue(True)
+        erro = (y.valor - linear_teste.valor)
+
+        gradiente_entradas = (-2/3) * erro.dot(W.valor)
+        gradiente_pesos = (-2/3) * erro.dot(X.valor)
+        gradiente_vies = (-2/3) * erro.sum(axis = 1)
+
+        np.testing.assert_almost_equal(
+            linear_teste.gradientes[X], gradiente_entradas)
+        np.testing.assert_almost_equal(
+            linear_teste.gradientes[W], gradiente_pesos)
+        np.testing.assert_almost_equal(
+            linear_teste.gradientes[b], gradiente_vies)
 
 class TesteSigmoide(unittest.TestCase):
     def teste_funcao_ativacao_de_sigmoide(self):
