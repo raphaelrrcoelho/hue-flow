@@ -57,9 +57,17 @@ class Sigmoide(No):
         """
         'x': Um objeto semelhante a uma array do numpy.
 
-        Return the result of the sigmoid function.
+        Retorna o resultado da função Sigmóide.
         """
         return 1 / (1 + np.exp(-x))
+
+    def _derivada(self, x):
+        """
+        'x': Um objeto semelhante a uma array do numpy.
+
+        Retorna a derivada da função Sigmóide.
+        """
+        return self._sigmoide(x) * (1 - self._sigmoide(x))
 
     def propagacao(self):
         self.valor = self._sigmoide(

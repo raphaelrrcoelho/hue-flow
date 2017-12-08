@@ -89,6 +89,14 @@ class TesteSigmoide(unittest.TestCase):
         self.assertAlmostEqual(
             sigmoide_teste._sigmoide(entrada_infinita), saida)
 
+    def teste_derivada_do_sigmoide(self):
+        sigmoide_teste = Sigmoide()
+        x = np.array([0])
+        x_linha = np.array([.25])
+
+        np.testing.assert_almost_equal(
+            sigmoide_teste._derivada(x), x_linha)
+
     def teste_sigmoide_em_produto_escalar_de_matrizes_e_pesos(self):
         X, W, b = Entrada(), Entrada(), Entrada()
 
