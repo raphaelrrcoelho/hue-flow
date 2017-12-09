@@ -41,18 +41,24 @@ def ordenacao_topologica(dict_entrada):
 
     return L
 
-def propagacao(no_saida, nos_ordenados):
+def propagacao(grafo_ordenado):
     """
-    Realiza uma passagem para a frente por uma lista de nós ordenados.
+    Realiza uma propagação para a frente por uma lista de nós ordenados.
 
     Argumentos:
-    'no_saida': O nó de saída do grafo (sem arestas de saída).
-    'nos_ordenados': uma lista topologicamente ordenada de nós.
-
-    Retorna o valor do nó de saída
+    'grafo_ordenado': uma lista topologicamente ordenada de nós.
     """
 
-    for no in nos_ordenados:
+    for no in grafo_ordenado:
         no.propagacao()
 
-    return no_saida.valor
+def retropropagacao(grafo_ordenado):
+    """
+    Realiza uma retropropagação por uma lista de nós ordenados.
+
+    Argumentos:
+    'grafo_ordenado': uma lista topologicamente ordenada de nós.
+    """
+
+    for no in grafo_ordenado[::-1]:
+        no.retropropagacao()

@@ -38,6 +38,14 @@ class Entrada(No):
         if valor is not None:
             self.valor = valor
 
+    def retropropagacao(self):
+        self.gradientes = {self: 0}
+
+        for no in self.nos_saida:
+            gradiente_custo = no.gradientes[self]
+
+            self.gradientes[self] += gradiente_custo * 1
+
 class Soma(No):
     def __init__(self, *arg):
         No.__init__(self, list(arg))
@@ -64,10 +72,10 @@ class Linear(No):
 
             # parcial do custo em relação as entradas
             self.gradientes[self.nos_entrada[0]] += \
-                    gradiente_custo.dot(self.nos_entrada[1].valor)
+                    np.dot(gradiente_custo, self.nos_entrada[1].valor)
             # parcial do custo em relação aos pesos
             self.gradientes[self.nos_entrada[1]] += \
-                    gradiente_custo.dot(self.nos_entrada[0].valor)
+                    np.dot(gradiente_custo, self.nos_entrada[0].valor.T)
             # parcial do custo em relação aos vieses
             self.gradientes[self.nos_entrada[2]] += gradiente_custo.sum(axis = 1)
 
@@ -94,14 +102,16 @@ class Sigmoide(No):
             np.array([ no.valor for no in self.nos_entrada]))[0]
 
     def retropropagacao(self):
-        self.gradientes = { no: np.zeros(no.valor.shape) for no in self.nos_entrada }
+        self.gradientes = { no: np.zeros(no.valor.shape)
+                            for no in self.nos_entrada }
 
         for no in self.nos_saida:
             gradiente_custo = no.gradientes[self]
             derivada = self._derivada(self.nos_entrada[0].valor)
 
             # parcial do custo em relação as entradas
-            self.gradientes[self.nos_entrada[0]] += (gradiente_custo * derivada)
+            self.gradientes[self.nos_entrada[0]] += \
+                    (gradiente_custo * derivada)
 
 class EQM(No):
     def __init__(self, nos_entrada = []):

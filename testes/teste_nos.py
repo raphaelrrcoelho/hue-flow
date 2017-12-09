@@ -152,9 +152,9 @@ class TesteSigmoide(unittest.TestCase):
         sigmoide_teste = Sigmoide([linear])
         custo = EQM([y, sigmoide_teste])
 
-        X.propagacao(np.array([[1., 0.]]))
-        W.propagacao(np.array([[0., 0.],
+        X.propagacao(np.array([[1., 0.],
                                [1., 1.]]))
+        W.propagacao(np.array([[0.], [0.]]))
         b.propagacao(np.array([0, 0]))
         y.propagacao(np.array([0, 1]))
 
